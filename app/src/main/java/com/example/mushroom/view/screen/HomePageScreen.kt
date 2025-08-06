@@ -30,6 +30,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -38,8 +39,10 @@ import androidx.compose.ui.unit.dp
 import androidx.core.graphics.toColorInt
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.example.mushroom.enums.Destination
 import com.example.mushroom.enums.ErrorType
+import com.example.mushroom.view.icon.COLORS
 import com.example.mushroom.view.screen.data.ShelfData
 import com.example.mushroom.view.screen.data.WarningData
 import com.example.mushroom.viewmodel.HomePageViewModel
@@ -126,7 +129,7 @@ fun HomeScreenContent(
     val topItems = destinations.take(2)
     val bottomItems = destinations.drop(2)
 
-    val pageColor = Color("#C7C5B4".toColorInt())
+    val pageColor = COLORS.PageColor
 
     Scaffold(
         modifier = modifier,
@@ -181,7 +184,8 @@ fun HomeScreenContent(
             }
             VerticalDivider(
                 modifier = Modifier
-                    .fillMaxHeight()
+                    .align(Alignment.Bottom)
+                    .fillMaxHeight(fraction = 0.94f)
                     .width(1.dp),
                 color = Color.Gray
             )
@@ -220,5 +224,8 @@ fun HomeScreenContent(
 @Preview
 @Composable
 fun HomeScreenContentPreview() {
-//    HomePageScreen()
+    HomePageScreen(
+        modifier = Modifier.padding(8.dp),
+        navController = rememberNavController(),
+    )
 }

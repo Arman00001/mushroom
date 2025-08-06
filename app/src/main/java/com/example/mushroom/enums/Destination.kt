@@ -8,7 +8,7 @@ enum class Destination(
     val icon: Int,
     val contentDescription: String
 ) {
-    NOTIFICATIONS("notifications", "notif", R.drawable.resource_default, "Notifications"),
+    NOTIFICATIONS("notifications", "notif", R.drawable.notifications, "Notifications"),
     TASK_HISTORY("history_of_tasks", "h_t", R.drawable.errorswarn, "History of Tasks"),
     START_AUTO_COLLECT("sbordisabled","collect",R.drawable.sbordisabled,"Start Auto Collect"),
     START_TESTING("start_testing","test", R.drawable.test,"Start Testing")

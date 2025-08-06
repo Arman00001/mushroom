@@ -14,6 +14,7 @@ class HomePageViewModel: ViewModel(){
     }
 
     fun onDestinationClicked(destination: Destination){
+
         println("CLICKED " + destination.contentDescription)
     }
 }

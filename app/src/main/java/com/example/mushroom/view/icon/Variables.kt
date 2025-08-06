@@ -12,6 +12,7 @@ object VariablesLinked {
 }
 
 object COLORS{
+    val PageColor: Color = Color("#EAE9DD".toColorInt())
     val WarningContainer: Color = Color("#FFF1E5".toColorInt())
     val WarningBorder: Color = Color("#FFCA99".toColorInt())
     val WarningText: Color = Color("#FF7A00".toColorInt())
