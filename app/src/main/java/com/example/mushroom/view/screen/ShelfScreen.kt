@@ -77,7 +77,6 @@ fun ShelfContent(
                     painter = painterResource(R.drawable.status_link),
                     contentDescription = "link status",
                     borderColor = VariablesError.SurfaceVarsSurfaceContainerHighest,
-                    onClick = {}
                 )
             } else {
                 RoundedIconButton(
@@ -86,7 +85,6 @@ fun ShelfContent(
                     contentColor = Color.Red,
                     containerColor = VariablesError.statusesVErrorContainer,
                     borderColor = VariablesError.SurfaceVarsSurfaceContainerHighest,
-                    onClick = {}
                 )
             }
             if (shelfData.humidity < 60) {
@@ -95,7 +93,6 @@ fun ShelfContent(
                     text = shelfData.humidity.toInt().toString() + " %",
                     contentDescription = "humidity",
                     borderColor = VariablesError.SurfaceVarsSurfaceContainerHighest,
-                    onClick = {}
                 )
             } else {
                 RoundedIconButton(
@@ -105,7 +102,6 @@ fun ShelfContent(
                     contentColor = Color.Red,
                     containerColor = VariablesError.statusesVErrorContainer,
                     borderColor = VariablesError.SurfaceVarsSurfaceContainerHighest,
-                    onClick = {}
                 )
             }
             shelfData.temperature?.let {
@@ -115,7 +111,6 @@ fun ShelfContent(
                         text = " " + it.toInt().toString(),
                         contentDescription = "temperature",
                         borderColor = VariablesError.SurfaceVarsSurfaceContainerHighest,
-                        onClick = {}
                     )
                 } else {
                     RoundedIconButton(
@@ -125,7 +120,6 @@ fun ShelfContent(
                         contentColor = Color.Red,
                         containerColor = VariablesError.statusesVErrorContainer,
                         borderColor = VariablesError.SurfaceVarsSurfaceContainerHighest,
-                        onClick = {}
                     )
                 }
             }
@@ -135,7 +129,6 @@ fun ShelfContent(
                     text = it.toInt().toString(),
                     contentDescription = "taskPercent",
                     borderColor = VariablesError.SurfaceVarsSurfaceContainerHighest,
-                    onClick = {}
                 )
             }
             shelfData.pressure?.let {
@@ -144,7 +137,6 @@ fun ShelfContent(
                     text = it.toInt().toString() + " Pa",
                     contentDescription = "pressure",
                     borderColor = VariablesError.SurfaceVarsSurfaceContainerHighest,
-                    onClick = {}
                 )
             }
             RoundedIconButton(
@@ -152,7 +144,6 @@ fun ShelfContent(
                 text = shelfData.charge.toString() + "%",
                 contentDescription = "battery",
                 borderColor = VariablesError.SurfaceVarsSurfaceContainerHighest,
-                onClick = {}
             )
         }
 
@@ -176,7 +167,6 @@ fun ShelfContent(
                             containerColor = data.errorType.containerColor,
                             borderColor = data.errorType.borderColor,
                             borderWidth = 1.dp,
-                            onClick = {}
                         )
                     }
 

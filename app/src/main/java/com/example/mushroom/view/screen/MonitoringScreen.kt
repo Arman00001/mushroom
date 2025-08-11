@@ -1,20 +1,34 @@
 package com.example.mushroom.view.screen
 
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -23,16 +37,20 @@ import androidx.compose.material3.NavigationRailItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
+import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Devices.TABLET
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -40,7 +58,13 @@ import androidx.core.graphics.toColorInt
 import com.example.mushroom.R
 import com.example.mushroom.enums.Destination
 import com.example.mushroom.view.icon.COLORS
+import com.example.mushroom.view.icon.RoundedIconButton
 import com.example.mushroom.view.icon.ShelfIcon
+import com.example.mushroom.view.screen.monitoring.cards.CameraSensorStatusScreen
+import com.example.mushroom.view.screen.monitoring.cards.ConnectionControlStatusScreen
+import com.example.mushroom.view.screen.monitoring.cards.EnergySupplyStatusScreen
+import com.example.mushroom.view.screen.monitoring.cards.PneumaticsStatusScreen
+import java.time.LocalDateTime
 
 @Composable
 fun MonitoringScreen(
@@ -78,16 +102,16 @@ fun MonitoringScreenContent(
                         selected = ind == selectedDestination,
                         onIconClick = {
                             println("index: $ind\nId: $id")
+                            selectedDestination = ind
                         }
                     )
-
                 }
 
                 Spacer(modifier = Modifier.weight(1f))
 
                 bottomItems.forEachIndexed { index, destination ->
                     NavigationRailItem(
-                        selected = selectedDestination == index,
+                        selected = false,
                         onClick = { onDestinationClick(destination) },
                         icon = {
                             Icon(
@@ -112,11 +136,12 @@ fun MonitoringScreenContent(
             Column(
                 modifier = Modifier
                     .weight(1f)                 // take the rest of the width
-                    .padding(contentPadding),
+                ,
                 verticalArrangement = Arrangement.Top,
                 horizontalAlignment = Alignment.Start
             ) {
                 Row(
+                    modifier = Modifier.padding(contentPadding),
                     horizontalArrangement = Arrangement.spacedBy(16.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -154,7 +179,6 @@ fun MonitoringScreenContent(
 
                         IconButton(onClick = {
                             println("menu clicked")
-                            currentStep++
                         }) {
                             Icon(
                                 tint = Color.Unspecified,
@@ -187,19 +211,139 @@ fun MonitoringScreenContent(
 
 
                 }
-                IconButton(
-                    onClick = { currentStep++ }
+
+//                //DELETE
+//                IconButton(
+//                    onClick = { currentStep++ }
+//                ) {
+//                    Icon(
+//                        tint = Color.Unspecified,
+//                        painter = painterResource(R.drawable.status_link),
+//                        contentDescription = ""
+//                    )
+//                }
+//                //
+
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxWidth()
                 ) {
-                    Icon(
-                        tint = Color.Unspecified,
-                        painter = painterResource(R.drawable.status_link),
-                        contentDescription = ""
-                    )
+                    LazyVerticalGrid(
+                        columns = GridCells.Fixed(2),
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(contentPadding),
+                        contentPadding = PaddingValues(15.dp),
+                        horizontalArrangement = Arrangement.spacedBy(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        item(span = { GridItemSpan(2) }) {
+                            Card(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(7.dp),
+                                shape = RoundedCornerShape(25.dp),
+                                colors = CardDefaults.cardColors(
+                                    containerColor = Color.White
+                                ),
+                                elevation = CardDefaults.cardElevation(4.dp)
+                            )
+                            {
+                                Box {
+                                    ConnectionControlStatusScreen(
+                                        id = currentShelfId,
+                                        connectionStatus = true,
+                                        cameraConnectionStatus = false,
+                                        sensorStatus = true,
+                                        testingTime = LocalDateTime.now()
+                                    )
+                                }
+                            }
+                        }
+                        item {
+                            Card(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(7.dp),
+                                shape = RoundedCornerShape(25.dp),
+                                colors = CardDefaults.cardColors(
+                                    containerColor = Color.White
+                                ),
+                                elevation = CardDefaults.cardElevation(4.dp)
+                            ) {
+                                Box {
+                                    CameraSensorStatusScreen(
+                                        connectionStatus = true,
+                                        testingTime = LocalDateTime.now()
+                                    )
+                                }
+                            }
+                        }
+                        item {
+                            Card(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(7.dp),
+                                shape = RoundedCornerShape(25.dp),
+                                colors = CardDefaults.cardColors(
+                                    containerColor = Color.White
+                                ),
+                                elevation = CardDefaults.cardElevation(4.dp)
+                            ) {
+                                Box {
+                                    PneumaticsStatusScreen(
+                                        connectionStatus = true,
+                                        pressure = 60,
+                                        testingTime = LocalDateTime.now()
+                                    )
+                                }
+                            }
+                        }
+                        item {
+                            Card(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(7.dp),
+                                shape = RoundedCornerShape(25.dp),
+                                colors = CardDefaults.cardColors(
+                                    containerColor = Color.White
+                                ),
+                                elevation = CardDefaults.cardElevation(4.dp)
+                            ) {
+                                Box {
+                                    EnergySupplyStatusScreen(
+                                        connectionStatus = true,
+                                        batteryPercentage = 60,
+                                        testingTime = LocalDateTime.now()
+                                    )
+                                }
+                            }
+                        }
+                    }
+
+
+                    Box(Modifier
+                        .align(Alignment.BottomEnd)
+                        .padding(16.dp)) {
+                        RoundedIconButton(
+                            painter = painterResource(R.drawable.testing2),
+                            contentDescription = "test",
+                            onClick = { println("testing") },
+                            containerColor = COLORS.TestingContainer,
+                            contentColor = Color.Unspecified,
+                            cornerSize = 18.dp,
+                            iconSize = 70.dp,
+                            top = 20.dp,
+                            bottom = 20.dp
+                        )
+                    }
                 }
             }
         }
     }
 }
+
 
 @Composable
 fun StepProgressIndicator(
@@ -254,7 +398,13 @@ fun StepProgressIndicator(
     }
 }
 
-@Preview
+@Preview(name = "Tablet", device = TABLET, showSystemUi = true)
+@Preview(
+    name = "Phone - Landscape",
+    device = "spec:width = 411dp, height = 891dp, orientation = landscape, dpi = 420",
+    showSystemUi = true
+)
+
 @Composable
 fun MonitoringScreenPreview() {
     MonitoringScreen(

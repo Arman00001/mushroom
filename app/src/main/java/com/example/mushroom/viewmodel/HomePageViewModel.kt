@@ -5,7 +5,7 @@ import com.example.mushroom.enums.Destination
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
-class HomePageViewModel: ViewModel(){
+class HomePageViewModel : ViewModel() {
     private val _uiState = MutableStateFlow<HomePageUiState>(HomePageUiState.Loading)
     val uiState = _uiState.asStateFlow()
 
@@ -13,14 +13,14 @@ class HomePageViewModel: ViewModel(){
         _uiState.value = HomePageUiState.Success
     }
 
-    fun onDestinationClicked(destination: Destination){
+    fun onDestinationClicked(destination: Destination) {
 
         println("CLICKED " + destination.contentDescription)
     }
 }
 
-sealed class HomePageUiState{
-    data object Loading: HomePageUiState()
-    data object Failed: HomePageUiState()
-    data object Success: HomePageUiState()
+sealed class HomePageUiState {
+    data object Loading : HomePageUiState()
+    data object Failed : HomePageUiState()
+    data object Success : HomePageUiState()
 }

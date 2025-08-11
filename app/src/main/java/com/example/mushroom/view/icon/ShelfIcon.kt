@@ -3,12 +3,8 @@ package com.example.mushroom.view.icon
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
@@ -33,6 +29,7 @@ fun ShelfIcon(
 ) {
     var tint = Color.DarkGray
     val modifier: Modifier
+
     if (selected) {
         tint = Color.Unspecified
         modifier = Modifier
@@ -45,17 +42,15 @@ fun ShelfIcon(
                 color = Color("#F1D0BC".toColorInt()),
                 shape = RoundedCornerShape(size = 20.dp)
             )
-//            .padding(start = 3.dp, top = 4.dp, end = 3.dp, bottom = 4.dp)
     } else {
         modifier = Modifier
     }
 
-Box (
-//    contentAlignment = Alignment.BottomEnd // place badge at top right
-    modifier = Modifier.clickable {
-        onIconClick()
-    }
-)
+    Box(
+        modifier = Modifier.clickable {
+            onIconClick()
+        }
+    )
     {
         IconButton(
             modifier = modifier,

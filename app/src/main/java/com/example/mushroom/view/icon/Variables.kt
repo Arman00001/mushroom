@@ -7,9 +7,7 @@ object VariablesError {
     val statusesVErrorContainer: Color = Color(0xFFFFE9E7)
     val SurfaceVarsSurfaceContainerHighest: Color = Color(0xFFEAE9DD)
 }
-object VariablesLinked {
-    val SurfaceVarsSurfaceContainerHighest: Color = Color(0xFFEAE9DD)
-}
+
 
 object COLORS{
     val PageColor: Color = Color("#EAE9DD".toColorInt())
@@ -22,4 +20,11 @@ object COLORS{
     val InfoContainer: Color = Color.Gray//Color("".toColorInt())
     val InfoBorder: Color = Color.Green//Color("".toColorInt())
     val InfoText: Color = Color.Cyan//Color("".toColorInt())
+    val StatusSuccessContainer: Color = Color("#E7FFE3".toColorInt())
+    val StatusSuccessText: Color = Color("#17A800".toColorInt())
+    val StatusErrorContainer: Color = Color("#F1BFBE".toColorInt())
+    val StatusErrorText: Color = Color("#DE3730".toColorInt())
+    val StatusTestingText: Color = Color("#46995E".toColorInt())
+    val StatusTestingBorder: Color = Color("#114D28".toColorInt())
+    val TestingContainer: Color = Color("#3A6B50".toColorInt())
 }
