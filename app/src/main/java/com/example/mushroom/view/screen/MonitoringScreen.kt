@@ -212,18 +212,6 @@ fun MonitoringScreenContent(
 
                 }
 
-//                //DELETE
-//                IconButton(
-//                    onClick = { currentStep++ }
-//                ) {
-//                    Icon(
-//                        tint = Color.Unspecified,
-//                        painter = painterResource(R.drawable.status_link),
-//                        contentDescription = ""
-//                    )
-//                }
-//                //
-
                 Box(
                     modifier = Modifier
                         .weight(1f)
