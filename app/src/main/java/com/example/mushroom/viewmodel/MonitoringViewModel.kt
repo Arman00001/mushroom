@@ -1,6 +1,7 @@
 package com.example.mushroom.viewmodel
 
 import androidx.lifecycle.ViewModel
+import com.example.mushroom.repository.DataRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 

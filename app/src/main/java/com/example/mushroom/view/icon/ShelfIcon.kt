@@ -4,8 +4,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -27,7 +27,7 @@ fun ShelfIcon(
     selected: Boolean,
     onIconClick: () -> Unit
 ) {
-    var tint = Color.DarkGray
+    var tint = Color("#616058".toColorInt())
     val modifier: Modifier
 
     if (selected) {
@@ -64,11 +64,13 @@ fun ShelfIcon(
         }
         Box(
             modifier = Modifier
-                .offset(x = 23.dp, y = 23.dp) // adjust badge position
-                .size(13.dp),
+                .align(Alignment.BottomEnd)
+                .offset(x = (-10).dp, y = (-10).dp)            // fine-tune if needed
+                .defaultMinSize(minWidth = 18.dp, minHeight = 18.dp),
             contentAlignment = Alignment.Center
         ) {
             Text(
+                modifier = Modifier.align(Alignment.Center),
                 text = number.toString(),
                 color = Color.White,
                 fontSize = 13.sp,

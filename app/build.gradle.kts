@@ -41,6 +41,12 @@ android {
 
 dependencies {
 
+    implementation(libs.androidx.datastore.preferences)
+
+
+    implementation(libs.koin.android)
+    implementation(libs.koin.androidx.compose)
+    implementation(platform(libs.koin.bom))
 
     implementation(libs.androidx.navigation.ui)
     implementation(libs.androidx.navigation.runtime.android)

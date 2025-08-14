@@ -25,6 +25,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
@@ -36,6 +38,8 @@ fun RoundedIconButton(
     painter: Painter? = null,
     text: String = "",
     textSize: TextUnit = TextUnit.Unspecified,
+    textAlign: TextAlign = TextAlign.Unspecified,
+    textFontWeight: FontWeight = FontWeight.Normal,
     iconSize: Dp = Dp.Unspecified,
     contentDescription: String,
     contentColor: Color = Color.Black,
@@ -105,15 +109,24 @@ fun RoundedIconButton(
                 Text(
                     text = text,
                     color = contentColor,
-                    fontSize = textSize
+                    fontSize = textSize,
+                    fontWeight = textFontWeight,
+                    textAlign = textAlign
                 )
             }
         } ?: run {
-            Text(
-                text = text,
-                color = contentColor,
-                fontSize = textSize
-            )
+            Row(
+                modifier = Modifier,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = text,
+                    color = contentColor,
+                    fontSize = textSize,
+                    fontWeight = textFontWeight,
+                    textAlign = textAlign
+                )
+            }
         }
     }
 }

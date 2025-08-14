@@ -9,56 +9,86 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.core.graphics.toColorInt
 import com.example.mushroom.R
 import com.example.mushroom.view.icon.RoundedIconButton
 import com.example.mushroom.view.icon.VariablesError
 import com.example.mushroom.view.screen.data.ShelfData
+import com.example.mushroom.viewmodel.ShelfViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun ShelfScreen(shelfData: ShelfData) {
-    ShelfContent(shelfData) { }
+fun ShelfScreen(
+    shelfData: ShelfData,
+    viewModel: ShelfViewModel = koinViewModel(),
+    onMonitoringClick: (Int) -> Unit
+) {
+    ShelfContent(
+        shelfData = shelfData,
+        onOpenCloseClick = viewModel.getShelfOpenCloseClickMethod(shelfData.warnings),
+        onMonitoringClick = onMonitoringClick,
+    )
 }
 
 @Composable
 fun ShelfContent(
     shelfData: ShelfData,
-    onShelfClick: () -> Unit
+    onOpenCloseClick: (Int) -> Unit,
+    onMonitoringClick: (Int) -> Unit,
 ) {
     Column {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(1.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
                 text = "Shelf N˚" + shelfData.id,
-                style = MaterialTheme.typography.titleSmall
+                fontSize = 16.sp,
+                fontWeight = FontWeight.SemiBold,
             )
+
+            Text(
+                text = "Manipulator ID: ${shelfData.id}",
+                fontSize = 15.sp,
+                fontWeight = FontWeight.SemiBold,
+                color = Color("#7E7D72".toColorInt())
+            )
+
+            Spacer(modifier = Modifier.weight(1f))
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                IconButton(onClick = { println("DSA") }) {
+                IconButton(onClick = { onMonitoringClick(shelfData.id) }) {
                     Icon(
                         tint = Color.Unspecified,
                         painter = painterResource(R.drawable.safe),
                         contentDescription = "safe"
                     )
                 }
-                IconButton(onClick = { println("DSA")}) {
+
+                var painter = R.drawable.close
+                if (shelfData.warnings == null) {
+                    painter = R.drawable.success
+                }
+                IconButton(onClick = { onOpenCloseClick(shelfData.id) }) {
                     Icon(
                         tint = Color.Unspecified,
-                        painter = painterResource(R.drawable.close),
+                        painter = painterResource(painter),
                         contentDescription = "close"
                     )
                 }
@@ -159,7 +189,7 @@ fun ShelfContent(
                     horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.Start),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    it.forEach() { data->
+                    it.forEach { data ->
                         RoundedIconButton(
                             text = data.text,
                             contentDescription = "warning",
@@ -185,7 +215,7 @@ fun ShelfContent(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    if (true) {
+                    if (shelfData.warnings == null) {
                         Icon(
                             tint = Color.Unspecified,
                             painter = painterResource(R.drawable.passtest),
@@ -223,7 +253,7 @@ fun ShelfContent(
     }
 }
 
-@Preview
+@Preview(device = Devices.TABLET, showSystemUi = true)
 @Composable
 fun ShelfItemPreview() {
     ShelfScreen(
@@ -236,5 +266,6 @@ fun ShelfItemPreview() {
             charge = 85,
             taskPercent = 40.0
         ),
+        onMonitoringClick = { println("monitoring click") }
     )
 }

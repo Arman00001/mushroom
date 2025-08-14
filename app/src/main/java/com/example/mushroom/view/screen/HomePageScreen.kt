@@ -1,5 +1,6 @@
 package com.example.mushroom.view.screen
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -32,95 +33,55 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Devices.TABLET
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.graphics.toColorInt
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.mushroom.enums.Destination
-import com.example.mushroom.enums.ErrorType
+import com.example.mushroom.ui.component.PopupBox
 import com.example.mushroom.view.icon.COLORS
+import com.example.mushroom.view.route.addShelves
 import com.example.mushroom.view.screen.data.ShelfData
-import com.example.mushroom.view.screen.data.WarningData
 import com.example.mushroom.viewmodel.HomePageViewModel
+import com.example.mushroom.viewmodel.ShelfViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun HomePageScreen(
     modifier: Modifier,
-    navController: NavHostController,
-//    allShelves: List<ShelfData>,
-    viewModel: HomePageViewModel = viewModel()
+    allShelves: List<ShelfData>,
+    onShelfClick: (Int) -> Unit,
+    onMonitoringClick: (Int) -> Unit,
+    viewModel: HomePageViewModel = koinViewModel(),
+    shelfViewModel: ShelfViewModel = koinViewModel()
 ) {
-    val warnings = listOf(
-        WarningData("das", ErrorType.ERROR),
-        WarningData("DSASD", ErrorType.WARNING),
-        WarningData("asddsa", ErrorType.WARNING),
-        WarningData("adsfgndjskfsijdnf", ErrorType.ERROR)
-    )
-    val allShelves = listOf(
-        ShelfData(
-            id = 1,
-            linked = true,
-            humidity = 45.0,
-            temperature = 22.5,
-            pressure = 1013.2,
-            charge = 85,
-            warnings = warnings
-        ),
-        ShelfData(
-            id = 2,
-            linked = false,
-            humidity = 50.3,
-            temperature = 21.0,
-            pressure = 1012.8,
-            charge = 60,
-            warnings = warnings
-        ),
-        ShelfData(
-            id = 3,
-            linked = true,
-            humidity = 38.7,
-            temperature = 23.1,
-            pressure = 1014.5,
-            charge = 95,
-            warnings = warnings
-        ),
-        ShelfData(
-            id = 4,
-            linked = true,
-            humidity = 64.2,
-            temperature = 28.4,
-            pressure = 1011.9,
-            charge = 40
-        ),
-        ShelfData(
-            id = 5,
-            linked = false,
-            humidity = 42.8,
-            temperature = 33.3,
-            pressure = 1013.7,
-            charge = 70
-        )
-    )
-
     HomeScreenContent(
         modifier,
-        navController,
         allShelves = allShelves,
-        onDestinationClick = viewModel::onDestinationClicked
+        onDestinationClick = viewModel::onDestinationClicked,
+        onShelfClick = onShelfClick,
+        onMonitoringClick
     )
+
+    val popup by shelfViewModel.popupState.collectAsStateWithLifecycle()
+
+    PopupBox(
+        popup.id, popup.isOpen, onDismiss = shelfViewModel::dismissPopup
+    )
+
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreenContent(
     modifier: Modifier,
-    navController: NavHostController,
     allShelves: List<ShelfData>,
-    onDestinationClick: (Destination) -> Unit
+    onDestinationClick: (Destination) -> Unit,
+    onShelfClick: (Int) -> Unit,
+    onMonitoringClick: (Int) -> Unit
 ) {
     val selectedDestination by rememberSaveable { mutableIntStateOf(-1) }
     val destinations = Destination.entries
@@ -201,7 +162,10 @@ fun HomeScreenContent(
             ) {
                 items(allShelves) { shelf ->
                     Card(
-                        modifier = Modifier.fillMaxWidth(),           // each card fills its column
+                        modifier = Modifier
+                            .fillMaxWidth()           // each card fills its column
+                            .clip(RoundedCornerShape(8.dp))
+                            .clickable(onClick = {onShelfClick(shelf.id)} ),
                         shape = RoundedCornerShape(8.dp),             // rounded corners
                         colors = CardDefaults.cardColors(
                             containerColor = Color.White              // pure white background
@@ -210,10 +174,12 @@ fun HomeScreenContent(
                     ) {
                         // optional inner padding
                         Box(Modifier.padding(12.dp)) {
-                            ShelfScreen(shelf)
+                            ShelfScreen(
+                                shelfData = shelf,
+                                onMonitoringClick = onMonitoringClick,
+                            )
                         }
                     }
-
                 }
             }
         }
@@ -221,11 +187,13 @@ fun HomeScreenContent(
 }
 
 
-@Preview
+@Preview(name = "Tablet", device = TABLET, showSystemUi = true)
 @Composable
 fun HomeScreenContentPreview() {
     HomePageScreen(
         modifier = Modifier.padding(8.dp),
-        navController = rememberNavController(),
+        addShelves(),
+        onShelfClick = { println("shelf") },
+        onMonitoringClick = { println("monitoring")},
     )
 }

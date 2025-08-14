@@ -1,6 +1,5 @@
 package com.example.mushroom.view.screen
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,15 +11,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -42,55 +38,57 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Devices.TABLET
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.core.graphics.toColorInt
 import com.example.mushroom.R
 import com.example.mushroom.enums.Destination
 import com.example.mushroom.view.icon.COLORS
 import com.example.mushroom.view.icon.RoundedIconButton
 import com.example.mushroom.view.icon.ShelfIcon
-import com.example.mushroom.view.screen.monitoring.cards.CameraSensorStatusScreen
-import com.example.mushroom.view.screen.monitoring.cards.ConnectionControlStatusScreen
-import com.example.mushroom.view.screen.monitoring.cards.EnergySupplyStatusScreen
-import com.example.mushroom.view.screen.monitoring.cards.PneumaticsStatusScreen
+import com.example.mushroom.view.screen.shelfdetails.cards.ShelfIdScreen
+import com.example.mushroom.view.screen.shelfdetails.cards.ShelfLastTaskCollectScreen
+import com.example.mushroom.view.screen.shelfdetails.cards.ShelfLastTaskTestingScreen
+import com.example.mushroom.view.screen.shelfdetails.cards.ShelfNumberScreen
 import java.time.LocalDateTime
 
+
 @Composable
-fun MonitoringScreen(
+fun ShelfDetailsScreen(
     shelfIDs: List<Int>,
     currentShelfId: Int,
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    onMonitoringClick: (Int) -> Unit
 ) {
-    MonitoringScreenContent(
-        shelfIDs,
+    ShelfDetailsContent(
+        shelfIDs = shelfIDs,
+        currentShelfId = currentShelfId,
         onDestinationClick = {},
-        currentShelfId,
-        onBack = onBack
+        onBack = onBack,
+        onMonitoringClick = onMonitoringClick
     )
 }
 
 @Composable
-fun MonitoringScreenContent(
+fun ShelfDetailsContent(
     shelfIDs: List<Int>,
-    onDestinationClick: (Destination) -> Unit,
     currentShelfId: Int,
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    onMonitoringClick: (Int) -> Unit,
+    onDestinationClick: (Destination) -> Unit,
 ) {
     var selectedDestination by rememberSaveable { mutableIntStateOf(currentShelfId) }
-    var currentStep by rememberSaveable { mutableIntStateOf(0) }
     val pageColor = COLORS.PageColor
     val listState = rememberLazyListState()
+
 
     val bottomItems = Destination.entries.take(2)
     Scaffold(
         modifier = Modifier,
         containerColor = pageColor,
-    ) { contentPadding ->
+
+        ) { contentPadding ->
         Row {
             NavigationRail(
                 modifier = Modifier,
@@ -164,19 +162,22 @@ fun MonitoringScreenContent(
                         )
                     }
                     Text(
-                        text = "Monitoring",
+                        text = "Details of Shelf Nº$currentShelfId",
                         style = MaterialTheme.typography.titleLarge
                     )
-                    Text(
-                        text = "Manipulator ID: $currentShelfId",//later change to manipulatorId
-                        style = MaterialTheme.typography.bodyMedium
-                    )
 
-                    Spacer(Modifier.weight(1f))
+                    Spacer(modifier = Modifier.weight(1f))
 
                     Row(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
+                        IconButton(onClick = { onMonitoringClick(currentShelfId) }) {
+                            Icon(
+                                tint = Color.Unspecified,
+                                painter = painterResource(R.drawable.safe),
+                                contentDescription = "safe"
+                            )
+                        }
 
                         IconButton(onClick = { println("notifs clicked") }) {
                             Icon(
@@ -200,30 +201,13 @@ fun MonitoringScreenContent(
 
                 Spacer(Modifier.height(4.dp))
 
-                Row(
-                    modifier = Modifier
-                        .align(Alignment.CenterHorizontally)
-                        .fillMaxWidth(fraction = 0.75f),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    StepProgressIndicator(
-                        listOf(
-                            painterResource(R.drawable.mini_test_hand),
-                            painterResource(R.drawable.mini_test_camera),
-                            painterResource(R.drawable.mini_test_sensor),
-                            painterResource(R.drawable.pressure),
-                            painterResource(R.drawable.battery)
-                        ),
-                        currentStep = currentStep
-                    )
-                }
-
                 Box(
                     modifier = Modifier
                         .weight(1f)
                         .fillMaxWidth()
                 ) {
+
+
                     LazyVerticalGrid(
                         columns = GridCells.Fixed(2),
                         modifier = Modifier
@@ -233,7 +217,7 @@ fun MonitoringScreenContent(
                         horizontalArrangement = Arrangement.spacedBy(16.dp),
                         verticalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
-                        item(span = { GridItemSpan(2) }) {
+                        item {
                             Card(
                                 modifier = Modifier
                                     .fillMaxWidth()
@@ -243,15 +227,12 @@ fun MonitoringScreenContent(
                                     containerColor = Color.White
                                 ),
                                 elevation = CardDefaults.cardElevation(4.dp)
-                            )
-                            {
+                            ) {
                                 Box {
-                                    ConnectionControlStatusScreen(
-                                        id = currentShelfId,//later change to manipulatorId
-                                        connectionStatus = true,
-                                        cameraConnectionStatus = false,
-                                        sensorStatus = true,
-                                        testingTime = LocalDateTime.now()
+                                    ShelfNumberScreen(
+                                        currentShelfId = currentShelfId,
+                                        humidity = 60,
+                                        temperature = 25
                                     )
                                 }
                             }
@@ -268,13 +249,17 @@ fun MonitoringScreenContent(
                                 elevation = CardDefaults.cardElevation(4.dp)
                             ) {
                                 Box {
-                                    CameraSensorStatusScreen(
-                                        connectionStatus = true,
-                                        testingTime = LocalDateTime.now()
+                                    ShelfLastTaskCollectScreen(
+                                        mushroomHeightLowerRange = 2,
+                                        mushroomHeightUpperRange = 4,
+                                        mushroomCount = 156,
+                                        collectSpeed = 5,
+                                        timeCollected = LocalDateTime.now()
                                     )
                                 }
                             }
                         }
+
                         item {
                             Card(
                                 modifier = Modifier
@@ -287,14 +272,20 @@ fun MonitoringScreenContent(
                                 elevation = CardDefaults.cardElevation(4.dp)
                             ) {
                                 Box {
-                                    PneumaticsStatusScreen(
-                                        connectionStatus = true,
-                                        pressure = 60,
-                                        testingTime = LocalDateTime.now()
+                                    ShelfIdScreen(
+                                        manipulatorId = currentShelfId, //later change to manipulatorId
+                                        linkedStatus = true,
+                                        coordinateX = 12,
+                                        coordinateY = 33,
+                                        coordinateZ = 24,
+                                        downloadSpeed = 250,
+                                        pressure = 25,
+                                        batteryPercentage = 60
                                     )
                                 }
                             }
                         }
+
                         item {
                             Card(
                                 modifier = Modifier
@@ -307,33 +298,46 @@ fun MonitoringScreenContent(
                                 elevation = CardDefaults.cardElevation(4.dp)
                             ) {
                                 Box {
-                                    EnergySupplyStatusScreen(
-                                        connectionStatus = true,
-                                        batteryPercentage = 60,
-                                        testingTime = LocalDateTime.now()
+                                    ShelfLastTaskTestingScreen(
+                                        timeTested = LocalDateTime.now()
                                     )
                                 }
                             }
                         }
                     }
-
-
                     Box(
                         Modifier
                             .align(Alignment.BottomEnd)
                             .padding(16.dp)
                     ) {
-                        RoundedIconButton(
-                            painter = painterResource(R.drawable.testing2),
-                            contentDescription = "test",
-                            onClick = { println("testing") },
-                            containerColor = COLORS.TestingContainer,
-                            contentColor = Color.Unspecified,
-                            cornerSize = 18.dp,
-                            iconSize = 70.dp,
-                            top = 20.dp,
-                            bottom = 20.dp
-                        )
+
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(16.dp)
+                        ) {
+                            RoundedIconButton(
+                                painter = painterResource(R.drawable.run_test),
+                                contentDescription = "run test",
+                                onClick = { println("testing start") },
+                                containerColor = COLORS.PopUpButtonContainer,
+                                contentColor = Color.Unspecified,
+                                cornerSize = 18.dp,
+                                iconSize = 70.dp,
+                                top = 20.dp,
+                                bottom = 20.dp
+                            )
+
+                            RoundedIconButton(
+                                painter = painterResource(R.drawable.testing2),
+                                contentDescription = "test",
+                                onClick = { println("testing") },
+                                containerColor = COLORS.TestingContainer,
+                                contentColor = Color.Unspecified,
+                                cornerSize = 18.dp,
+                                iconSize = 70.dp,
+                                top = 20.dp,
+                                bottom = 20.dp
+                            )
+                        }
                     }
                 }
             }
@@ -342,69 +346,13 @@ fun MonitoringScreenContent(
 }
 
 
+@Preview(device = Devices.TABLET, showSystemUi = true)
 @Composable
-fun StepProgressIndicator(
-    painters: List<Painter>,
-    currentStep: Int,
-    modifier: Modifier = Modifier,
-    completedColor: Color = Color("#46995E".toColorInt()),
-    activeColor: Color = Color("#3A6B50".toColorInt()),
-    upcomingColor: Color = Color("#C7C5B4".toColorInt()),
-    iconSize: Dp = 22.dp,
-    lineHeight: Dp = 4.dp,
-    circleSize: Dp = 40.dp
-) {
-    Row(
-        modifier = Modifier,
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        painters.forEachIndexed { index, painter ->
-            val circleColor = when {
-                index < currentStep -> completedColor
-                index == currentStep -> activeColor
-                else -> upcomingColor
-            }
-            val iconTint = if (index > currentStep) Color.Unspecified else Color.White
-
-            Box(
-                modifier = Modifier
-                    .size(circleSize)
-                    .background(circleColor, CircleShape),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    tint = iconTint,
-                    painter = painter,
-                    contentDescription = "",
-                    modifier = Modifier.size(iconSize)
-                )
-            }
-
-            // 2) Connector bar (skip after the last icon)
-            if (index < painters.lastIndex) {
-                // Bar color: completed if fully behind a completed step
-                val barColor = if (index < currentStep) completedColor else upcomingColor
-                Box(
-                    modifier = Modifier
-                        .weight(1f)
-                        .height(lineHeight)
-                        .background(barColor)
-                )
-            }
-        }
-    }
-}
-
-@Preview(name = "Tablet", device = TABLET, showSystemUi = true)
-@Preview(
-    name = "Phone - Landscape",
-    device = "spec:width = 411dp, height = 891dp, orientation = landscape, dpi = 420",
-    showSystemUi = true
-)
-
-@Composable
-fun MonitoringScreenPreview() {
-    MonitoringScreen(
-        listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10), 1, onBack = { println("back") }
+fun ShelfDetailsPreview() {
+    ShelfDetailsScreen(
+        shelfIDs = listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12),
+        currentShelfId = 2,
+        onBack = { println("back") },
+        onMonitoringClick = {}
     )
 }
