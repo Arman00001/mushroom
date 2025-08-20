@@ -13,10 +13,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -44,9 +44,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.mushroom.R
 import com.example.mushroom.enums.Destination
+import com.example.mushroom.enums.ErrorType
 import com.example.mushroom.view.icon.COLORS
 import com.example.mushroom.view.icon.RoundedIconButton
 import com.example.mushroom.view.icon.ShelfIcon
+import com.example.mushroom.view.screen.data.WarningData
 import com.example.mushroom.view.screen.shelfdetails.cards.ShelfIdScreen
 import com.example.mushroom.view.screen.shelfdetails.cards.ShelfLastTaskCollectScreen
 import com.example.mushroom.view.screen.shelfdetails.cards.ShelfLastTaskTestingScreen
@@ -208,14 +210,14 @@ fun ShelfDetailsContent(
                 ) {
 
 
-                    LazyVerticalGrid(
-                        columns = GridCells.Fixed(2),
+                    LazyVerticalStaggeredGrid(
+                        columns = StaggeredGridCells.Fixed(2),
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(contentPadding),
                         contentPadding = PaddingValues(15.dp),
-                        horizontalArrangement = Arrangement.spacedBy(16.dp),
-                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalItemSpacing = 8.dp
                     ) {
                         item {
                             Card(
@@ -254,7 +256,8 @@ fun ShelfDetailsContent(
                                         mushroomHeightUpperRange = 4,
                                         mushroomCount = 156,
                                         collectSpeed = 5,
-                                        timeCollected = LocalDateTime.now()
+                                        timeCollected = LocalDateTime.now(),
+                                        warnings = addWarnings()
                                     )
                                 }
                             }
@@ -299,7 +302,8 @@ fun ShelfDetailsContent(
                             ) {
                                 Box {
                                     ShelfLastTaskTestingScreen(
-                                        timeTested = LocalDateTime.now()
+                                        timeTested = LocalDateTime.now(),
+                                        warnings = addWarnings()
                                     )
                                 }
                             }
@@ -312,6 +316,7 @@ fun ShelfDetailsContent(
                     ) {
 
                         Row(
+                            modifier = Modifier.padding(contentPadding),
                             horizontalArrangement = Arrangement.spacedBy(16.dp)
                         ) {
                             RoundedIconButton(
@@ -320,6 +325,7 @@ fun ShelfDetailsContent(
                                 onClick = { println("testing start") },
                                 containerColor = COLORS.PopUpButtonContainer,
                                 contentColor = Color.Unspecified,
+                                borderWidth = (-1).dp,
                                 cornerSize = 18.dp,
                                 iconSize = 70.dp,
                                 top = 20.dp,
@@ -332,6 +338,7 @@ fun ShelfDetailsContent(
                                 onClick = { println("testing") },
                                 containerColor = COLORS.TestingContainer,
                                 contentColor = Color.Unspecified,
+                                borderWidth = (-1).dp,
                                 cornerSize = 18.dp,
                                 iconSize = 70.dp,
                                 top = 20.dp,
@@ -355,4 +362,16 @@ fun ShelfDetailsPreview() {
         onBack = { println("back") },
         onMonitoringClick = {}
     )
+}
+
+
+fun addWarnings():List<WarningData>{
+    val warnings = listOf(
+        WarningData("camera 2", ErrorType.ERROR),
+        WarningData("warning", ErrorType.WARNING),
+        WarningData("asddsa", ErrorType.WARNING),
+        WarningData("adsfgndjskfsijdnf", ErrorType.ERROR),
+        WarningData("adsfgndjskfsijdnf", ErrorType.ERROR),
+        WarningData("adsfgndjskfsijdnf", ErrorType.ERROR))
+    return warnings
 }
