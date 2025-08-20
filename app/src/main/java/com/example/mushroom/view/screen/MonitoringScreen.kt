@@ -329,6 +329,7 @@ fun MonitoringScreenContent(
                             onClick = { println("testing") },
                             containerColor = COLORS.TestingContainer,
                             contentColor = Color.Unspecified,
+                            borderWidth = (-1).dp,
                             cornerSize = 18.dp,
                             iconSize = 70.dp,
                             top = 20.dp,
