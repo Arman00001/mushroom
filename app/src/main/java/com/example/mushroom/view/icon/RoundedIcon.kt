@@ -1,12 +1,9 @@
 package com.example.mushroom.view.icon
 
-import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
@@ -17,7 +14,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,6 +31,7 @@ import com.example.mushroom.R
 
 @Composable
 fun RoundedIconButton(
+    modifier: Modifier = Modifier,
     painter: Painter? = null,
     text: String = "",
     textSize: TextUnit = TextUnit.Unspecified,
@@ -52,28 +49,14 @@ fun RoundedIconButton(
     bottom: Dp = 8.dp,
     cornerSize: Dp = 8.dp,
     enabled: Boolean = true,
-    pressAnimation: Boolean = true,
     onClick: (() -> Unit)? = null
 ) {
     val shape = RoundedCornerShape(cornerSize)
     val interaction = remember { MutableInteractionSource() }
-    val isPressed = if (onClick != null) {
-        interaction.collectIsPressedAsState().value
-    } else false
-
-    // Subtle press animations (scale + shadow)
-    val scale by animateFloatAsState(
-        targetValue = if (pressAnimation && isPressed) 0.96f else 1f,
-        label = "press-scale"
-    )
-    val elevation by animateDpAsState(
-        targetValue = if (pressAnimation && isPressed) 2.dp else 0.dp,
-        label = "press-elev"
-    )
 
     val clickMod =
         if (onClick != null) {
-            Modifier
+            modifier
                 .clip(shape)
                 .clickable(
                     enabled = enabled,
@@ -81,7 +64,7 @@ fun RoundedIconButton(
                     indication = ripple(true),
                     onClick = onClick
                 )
-        } else Modifier
+        } else modifier
 
     Box(
         modifier = Modifier
