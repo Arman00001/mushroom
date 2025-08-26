@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
@@ -33,6 +34,7 @@ import com.example.mushroom.R
 fun RoundedIconButton(
     modifier: Modifier = Modifier,
     painter: Painter? = null,
+    horizontalSpace: Dp = 0.dp,
     text: String = "",
     textSize: TextUnit = TextUnit.Unspecified,
     textAlign: TextAlign = TextAlign.Unspecified,
@@ -81,7 +83,8 @@ fun RoundedIconButton(
         painter?.let {
             Row(
                 modifier = Modifier.height(44.dp),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(horizontalSpace)
             ) {
                 Icon(
                     tint = contentColor,

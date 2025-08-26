@@ -38,7 +38,7 @@ import com.example.mushroom.view.icon.RoundedIconButton
 
 
 @Composable
-fun PopupBox(
+fun PopupErrorBox(
     id: Int = 1,
     open: Boolean,
     onDismiss: ()->Unit,
@@ -149,11 +149,12 @@ fun PopupBox(
                         text = "Check Connection",
                         containerColor = COLORS.PopUpButtonContainer,
                         contentColor = Color.White,
-                        borderColor = COLORS.PopUpButtonContainer,
-                        borderWidth = 0.dp,
+                        borderWidth = (-1).dp,
                         cornerSize = 25.dp,
                         top = 16.dp,
                         bottom = 16.dp,
+                        start = 17.dp,
+                        end = 17.dp,
                         contentDescription = "Check connection",
                         onClick = { println("Clicked \"check connection\"") }
                     )

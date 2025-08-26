@@ -29,4 +29,5 @@ object COLORS{
     val TestingContainer: Color = Color("#3A6B50".toColorInt())
     val PopUpErrorBoxContainer: Color = Color("#F8F7F3".toColorInt())
     val PopUpButtonContainer: Color = Color("#CC5308".toColorInt())
+    val DarkColorText: Color = Color("#42423C".toColorInt())
 }

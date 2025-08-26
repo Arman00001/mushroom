@@ -320,8 +320,8 @@ fun MonitoringScreenContent(
 
                     Box(
                         Modifier
+                            .padding(contentPadding).padding(16.dp)
                             .align(Alignment.BottomEnd)
-                            .padding(16.dp)
                     ) {
                         RoundedIconButton(
                             painter = painterResource(R.drawable.testing2),
@@ -356,7 +356,7 @@ fun StepProgressIndicator(
     circleSize: Dp = 40.dp
 ) {
     Row(
-        modifier = Modifier,
+        modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,
     ) {
         painters.forEachIndexed { index, painter ->

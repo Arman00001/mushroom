@@ -29,10 +29,9 @@ fun HomePageRoute(
         HomePageUiState.Loading -> LoadingScreen()
         HomePageUiState.Failed -> ErrorScreen { Unit }// viewModel.retry() }
         HomePageUiState.Success -> HomePageScreen(
-            Modifier.padding(8.dp),
-            addShelves(),
-            onShelfClick,
-            onMonitoringClick
+            allShelves = addShelves(),
+            onShelfClick = onShelfClick,
+            onMonitoringClick = onMonitoringClick
         )
     }
 }
@@ -53,7 +52,7 @@ fun addShelves(): List<ShelfData> {
             temperature = 22.5,
             pressure = 1013.2,
             charge = 85,
-            warnings = warnings
+//            warnings = warnings
         ),
         ShelfData(
             id = 2,
@@ -62,7 +61,7 @@ fun addShelves(): List<ShelfData> {
             temperature = 21.0,
             pressure = 1012.8,
             charge = 60,
-            warnings = warnings
+//            warnings = warnings
         ),
         ShelfData(
             id = 3,
@@ -71,7 +70,7 @@ fun addShelves(): List<ShelfData> {
             temperature = 23.1,
             pressure = 1014.5,
             charge = 95,
-            warnings = warnings
+//            warnings = warnings
         ),
         ShelfData(
             id = 4,
