@@ -3,16 +3,20 @@ package com.example.mushroom.view.icon
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -29,6 +33,8 @@ fun ShelfIcon(
 ) {
     var tint = Color("#616058".toColorInt())
     val modifier: Modifier
+    val shape = RoundedCornerShape(size = 16.dp)
+    val interaction = remember { MutableInteractionSource() }
 
     if (selected) {
         tint = Color.Unspecified
@@ -36,32 +42,33 @@ fun ShelfIcon(
             .border(
                 width = 2.dp,
                 color = Color("#E7AE8B".toColorInt()),
-                shape = RoundedCornerShape(size = 20.dp)
+                shape = shape
             )
             .background(
                 color = Color("#F1D0BC".toColorInt()),
-                shape = RoundedCornerShape(size = 20.dp)
+                shape = shape
             )
     } else {
         modifier = Modifier
     }
 
     Box(
-        modifier = Modifier.clickable {
-            onIconClick()
-        }
+        modifier = Modifier
+            .clip(shape)
+            .clickable(
+                onClick = onIconClick,
+                interactionSource = interaction,
+                indication = ripple(true),
+            ),
     )
     {
-        IconButton(
-            modifier = modifier,
-            onClick = onIconClick
-        ) {
-            Icon(
-                tint = tint,
-                painter = painterResource(R.drawable.shelf),
-                contentDescription = "shelf"
-            )
-        }
+        Icon(
+            modifier = modifier
+                .padding(start = 8.dp, top = 8.dp, end = 8.dp, bottom = 8.dp),
+            tint = tint,
+            painter = painterResource(R.drawable.shelf),
+            contentDescription = "shelf"
+        )
         Box(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
