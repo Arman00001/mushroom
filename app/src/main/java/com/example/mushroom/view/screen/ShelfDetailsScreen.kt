@@ -223,7 +223,7 @@ fun ShelfDetailsContent(
                             Card(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(7.dp),
+                                    .padding(8.dp),
                                 shape = RoundedCornerShape(25.dp),
                                 colors = CardDefaults.cardColors(
                                     containerColor = Color.White
@@ -243,7 +243,7 @@ fun ShelfDetailsContent(
                             Card(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(7.dp),
+                                    .padding(8.dp),
                                 shape = RoundedCornerShape(25.dp),
                                 colors = CardDefaults.cardColors(
                                     containerColor = Color.White
@@ -267,7 +267,7 @@ fun ShelfDetailsContent(
                             Card(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(7.dp),
+                                    .padding(8.dp),
                                 shape = RoundedCornerShape(25.dp),
                                 colors = CardDefaults.cardColors(
                                     containerColor = Color.White
@@ -293,7 +293,7 @@ fun ShelfDetailsContent(
                             Card(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(7.dp),
+                                    .padding(8.dp),
                                 shape = RoundedCornerShape(25.dp),
                                 colors = CardDefaults.cardColors(
                                     containerColor = Color.White
