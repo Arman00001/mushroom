@@ -1,6 +1,5 @@
 package com.example.mushroom.view.screen
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,14 +22,12 @@ import androidx.compose.material3.NavigationRail
 import androidx.compose.material3.NavigationRailItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.VerticalDivider
-import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Devices.TABLET
@@ -196,21 +193,13 @@ fun HomeScreenContent(
                     Card(
                         modifier = Modifier
                             .fillMaxWidth()           // each card fills its column
-                            .clip(shape)
-                            .then(
-                                Modifier
-                                .clip(shape)
-                                .clickable(
-                                    interactionSource = null,
-                                    indication = ripple(true),
-                                    onClick = { onShelfClick(shelf.id) }
-                                ))
                             .padding(8.dp),
                         shape = shape,             // rounded corners
                         colors = CardDefaults.cardColors(
                             containerColor = Color.White              // pure white background
                         ),
-                        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)  // subtle drop shadow
+                        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),  // subtle drop shadow
+                        onClick = { onShelfClick(shelf.id) }
                     ) {
                         // optional inner padding
                         Box(Modifier.padding(12.dp)) {
