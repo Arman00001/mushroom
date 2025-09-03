@@ -3,19 +3,18 @@ package com.example.mushroom.ui.component
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.Icon
-import androidx.compose.material3.ripple
+import androidx.compose.material3.MenuAnchorType
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -33,6 +32,7 @@ import androidx.core.graphics.toColorInt
 import androidx.wear.compose.material.Text
 import com.example.mushroom.R
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DropdownMenuSelected(
     options: List<Int> = listOf(1, 2, 3, 4, 5, 6),
@@ -52,62 +52,59 @@ fun DropdownMenuSelected(
     val top = 15.dp
     val bottom = 15.dp
 
-    Box(
-        modifier = Modifier
-            .clip(shape)
-            .border(
-                width = borderWidth,
-                color = borderColor,
-                shape = shape
-            )
-            .background(color = containerColor, shape = RoundedCornerShape(size = cornerSize))
-            .then(
-                Modifier
-                    .fillMaxWidth(0.5f)
-                    .clip(shape)
-                    .clickable(
-                        enabled = true,
-                        interactionSource = null,
-                        indication = ripple(true),
-                        onClick = { expanded = !expanded }
-                    )
-            )
-            .padding(start = start, end = end)//, top = top, bottom = bottom)
-    ) {
-        Row(
-            modifier = Modifier.height(44.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(0.dp)
-        ) {
-            Text(
-                text = text,
-                color = contentColor,
-            )
-            Spacer(Modifier.weight(1f))
-            Icon(
-                tint = contentColor,
-                painter = painter,
-                contentDescription = "",
-            )
-        }
-
-    }
-    DropdownMenu(
-        modifier = Modifier.fillMaxWidth(0.5f),
+    ExposedDropdownMenuBox(
         expanded = expanded,
-        containerColor = containerColor,
-        border = BorderStroke(borderWidth, borderColor),
-        onDismissRequest = { expanded = false },
-        shape = shape
+        onExpandedChange = { expanded = !expanded },
+        modifier = Modifier.padding(40.dp)
     ) {
-        options.forEach { item ->
-            DropdownMenuItem(
-                text = { Text(text = "Shelf Nº$item", color = contentColor) },
-                onClick = {
-                    onItemClick(item)
-                    text = "Shelf Nº$item"
-                }
-            )
+        Box(
+            modifier = Modifier
+                .menuAnchor(MenuAnchorType.PrimaryEditable, true)
+                .clip(shape)
+                .border(
+                    width = borderWidth,
+                    color = borderColor,
+                    shape = shape
+                )
+                .background(color = containerColor, shape = RoundedCornerShape(size = cornerSize))
+                .padding(start = start, end = end)//, top = top, bottom = bottom)
+        ) {
+            Row(
+                modifier = Modifier.height(44.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(0.dp)
+            ) {
+                Text(
+                    text = text,
+                    color = contentColor,
+                )
+                Spacer(Modifier.weight(1f))
+                Icon(
+                    tint = contentColor,
+                    painter = painter,
+                    contentDescription = "",
+                )
+            }
+
+        }
+        ExposedDropdownMenu(
+            expanded = expanded,
+            containerColor = containerColor,
+            border = BorderStroke(borderWidth, borderColor),
+            shape = shape,
+            onDismissRequest = { expanded = false }
+        ) {
+
+            options.forEach { item ->
+                DropdownMenuItem(
+                    text = { Text(text = "Shelf Nº$item", color = contentColor) },
+                    onClick = {
+                        onItemClick(item)
+                        text = "Shelf Nº$item"
+                        expanded = false
+                    }
+                )
+            }
         }
     }
 }
