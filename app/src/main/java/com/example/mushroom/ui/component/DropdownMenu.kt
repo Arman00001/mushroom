@@ -54,8 +54,7 @@ fun DropdownMenuSelected(
 
     ExposedDropdownMenuBox(
         expanded = expanded,
-        onExpandedChange = { expanded = !expanded },
-        modifier = Modifier.padding(40.dp)
+        onExpandedChange = { expanded = !expanded }
     ) {
         Box(
             modifier = Modifier
