@@ -28,7 +28,7 @@ fun AppNavigation(navController: NavHostController) {
         ) { backStackEntry ->
             val id = backStackEntry.arguments!!.getInt("shelfId")
             MonitoringRoute(
-                id,
+                currentShelfId = id,
                 onBack = { navController.navigateUp() }
             )
         }

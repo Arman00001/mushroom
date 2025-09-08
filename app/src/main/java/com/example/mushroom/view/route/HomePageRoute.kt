@@ -1,12 +1,8 @@
 package com.example.mushroom.view.route
 
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
 import com.example.mushroom.enums.ErrorType
 import com.example.mushroom.ui.component.ErrorScreen
 import com.example.mushroom.ui.component.LoadingScreen

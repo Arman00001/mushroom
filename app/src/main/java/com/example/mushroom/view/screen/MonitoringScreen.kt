@@ -44,8 +44,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Devices.TABLET
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.toColorInt
@@ -64,13 +62,15 @@ import java.time.LocalDateTime
 fun MonitoringScreen(
     shelfIDs: List<Int>,
     currentShelfId: Int,
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    selectShelf: (Int) -> Unit
 ) {
     MonitoringScreenContent(
-        shelfIDs,
+        shelfIDs = shelfIDs,
         onDestinationClick = {},
-        currentShelfId,
-        onBack = onBack
+        currentShelfId = currentShelfId,
+        onBack = onBack,
+        onShelfIconClick = selectShelf
     )
 }
 
@@ -79,9 +79,9 @@ fun MonitoringScreenContent(
     shelfIDs: List<Int>,
     onDestinationClick: (Destination) -> Unit,
     currentShelfId: Int,
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    onShelfIconClick: (Int) -> Unit
 ) {
-    var selectedDestination by rememberSaveable { mutableIntStateOf(currentShelfId) }
     var currentStep by rememberSaveable { mutableIntStateOf(0) }
     val pageColor = COLORS.PageColor
     val listState = rememberLazyListState()
@@ -103,14 +103,13 @@ fun MonitoringScreenContent(
                     contentPadding = PaddingValues(8.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    itemsIndexed(shelfIDs) { index, id ->
-                        val ind = index + 1
+                    itemsIndexed(items = shelfIDs, key = { _, id -> id }) { index, id ->
+                        val numberBadge = index + 1
                         ShelfIcon(
-                            number = ind,
-                            selected = ind == selectedDestination,
+                            number = numberBadge,
+                            selected = (id == currentShelfId),
                             onIconClick = {
-                                println("index: $ind\nId: $id")
-                                selectedDestination = ind
+                                onShelfIconClick(id)
                             }
                         )
                     }
@@ -118,7 +117,7 @@ fun MonitoringScreenContent(
 
                 Spacer(modifier = Modifier.weight(1f))
 
-                bottomItems.forEachIndexed { index, destination ->
+                bottomItems.forEach { destination ->
                     NavigationRailItem(
                         selected = false,
                         onClick = { onDestinationClick(destination) },
@@ -320,7 +319,8 @@ fun MonitoringScreenContent(
 
                     Box(
                         Modifier
-                            .padding(contentPadding).padding(16.dp)
+                            .padding(contentPadding)
+                            .padding(16.dp)
                             .align(Alignment.BottomEnd)
                     ) {
                         RoundedIconButton(
@@ -396,16 +396,19 @@ fun StepProgressIndicator(
     }
 }
 
-@Preview(name = "Tablet", device = TABLET, showSystemUi = true)
-@Preview(
-    name = "Phone - Landscape",
-    device = "spec:width = 411dp, height = 891dp, orientation = landscape, dpi = 420",
-    showSystemUi = true
-)
+//@Preview(name = "Tablet", device = TABLET, showSystemUi = true)
+//@Preview(
+//    name = "Phone - Landscape",
+//    device = "spec:width = 411dp, height = 891dp, orientation = landscape, dpi = 420",
+//    showSystemUi = true
+//)
 
-@Composable
-fun MonitoringScreenPreview() {
-    MonitoringScreen(
-        listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10), 1, onBack = { println("back") }
-    )
-}
+//@Composable
+//fun MonitoringScreenPreview() {
+//    MonitoringScreen(
+//        listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10),
+//        1,
+//        onBack = { println("back") },
+//        viewModel::selectShelf
+//    )
+//}

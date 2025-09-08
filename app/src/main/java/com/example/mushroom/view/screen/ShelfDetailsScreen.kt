@@ -31,16 +31,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Devices
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.mushroom.R
 import com.example.mushroom.enums.Destination
@@ -61,14 +55,17 @@ fun ShelfDetailsScreen(
     shelfIDs: List<Int>,
     currentShelfId: Int,
     onBack: () -> Unit,
-    onMonitoringClick: (Int) -> Unit
+    onMonitoringClick: (Int) -> Unit,
+    selectShelf: (Int) -> Unit
 ) {
+
     ShelfDetailsContent(
         shelfIDs = shelfIDs,
         currentShelfId = currentShelfId,
         onDestinationClick = {},
         onBack = onBack,
-        onMonitoringClick = onMonitoringClick
+        onMonitoringClick = onMonitoringClick,
+        onShelfIconClick = selectShelf
     )
 }
 
@@ -79,21 +76,19 @@ fun ShelfDetailsContent(
     onBack: () -> Unit,
     onMonitoringClick: (Int) -> Unit,
     onDestinationClick: (Destination) -> Unit,
+    onShelfIconClick: (Int) -> Unit
 ) {
-    var selectedDestination by rememberSaveable { mutableIntStateOf(currentShelfId) }
     val pageColor = COLORS.PageColor
     val listState = rememberLazyListState()
 
-
     val bottomItems = Destination.entries.take(2)
+
     Scaffold(
         modifier = Modifier,
-        containerColor = pageColor,
-
-        ) { contentPadding ->
+        containerColor = pageColor
+    ) { contentPadding ->
         Row {
             NavigationRail(
-                modifier = Modifier,
                 containerColor = pageColor
             ) {
                 LazyColumn(
@@ -103,14 +98,13 @@ fun ShelfDetailsContent(
                     contentPadding = PaddingValues(8.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    itemsIndexed(shelfIDs) { index, id ->
-                        val ind = index + 1
+                    itemsIndexed(items = shelfIDs, key = { _, id -> id }) { index, id ->
+                        val numberBadge = index + 1
                         ShelfIcon(
-                            number = ind,
-                            selected = ind == selectedDestination,
+                            number = numberBadge,
+                            selected = (id == currentShelfId),
                             onIconClick = {
-                                println("index: $ind\nId: $id")
-                                selectedDestination = ind
+                                onShelfIconClick(id)
                             }
                         )
                     }
@@ -118,7 +112,7 @@ fun ShelfDetailsContent(
 
                 Spacer(modifier = Modifier.weight(1f))
 
-                bottomItems.forEachIndexed { index, destination ->
+                bottomItems.forEach { destination ->
                     NavigationRailItem(
                         selected = false,
                         onClick = { onDestinationClick(destination) },
@@ -353,25 +347,28 @@ fun ShelfDetailsContent(
 }
 
 
-@Preview(device = Devices.TABLET, showSystemUi = true)
-@Composable
-fun ShelfDetailsPreview() {
-    ShelfDetailsScreen(
-        shelfIDs = listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12),
-        currentShelfId = 2,
-        onBack = { println("back") },
-        onMonitoringClick = {}
-    )
-}
+//@Preview(device = Devices.TABLET, showSystemUi = true)
+//@Composable
+//fun ShelfDetailsPreview() {
+//    ShelfDetailsScreen(
+//        shelfIDs = listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12),
+//        currentShelfId = 2,
+//        onBack = { println("back") },
+//        onMonitoringClick = {},
+//        shelvesUiState = S,
+//        selectShelf = {}
+//    )
+//}
 
 
-fun addWarnings():List<WarningData>{
+fun addWarnings(): List<WarningData> {
     val warnings = listOf(
         WarningData("camera 2", ErrorType.ERROR),
         WarningData("warning", ErrorType.WARNING),
         WarningData("asddsa", ErrorType.WARNING),
         WarningData("adsfgndjskfsijdnf", ErrorType.ERROR),
         WarningData("adsfgndjskfsijdnf", ErrorType.ERROR),
-        WarningData("adsfgndjskfsijdnf", ErrorType.ERROR))
+        WarningData("adsfgndjskfsijdnf", ErrorType.ERROR)
+    )
     return warnings
 }
