@@ -32,12 +32,14 @@ import org.koin.androidx.compose.koinViewModel
 fun ShelfScreen(
     shelfData: ShelfData,
     viewModel: ShelfViewModel = koinViewModel(),
-    onMonitoringClick: (Int) -> Unit
+    onMonitoringClick: (Int) -> Unit,
+    onRunHarvestClick: ()->Unit
 ) {
     ShelfContent(
         shelfData = shelfData,
         onOpenCloseClick = viewModel.getShelfOpenCloseClickMethod(shelfData.warnings),
         onMonitoringClick = onMonitoringClick,
+        onRunHarvestClick = onRunHarvestClick
     )
 }
 
@@ -46,6 +48,7 @@ fun ShelfContent(
     shelfData: ShelfData,
     onOpenCloseClick: (Int) -> Unit,
     onMonitoringClick: (Int) -> Unit,
+    onRunHarvestClick: () -> Unit,
 ) {
     Column {
         Row(
@@ -236,17 +239,44 @@ fun ShelfContent(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    Icon(
-                        tint = Color.Unspecified,
-                        painter = painterResource(R.drawable.checktest),
+                    RoundedIconButton(
+                        painter = painterResource(R.drawable.testing2),
+                        borderWidth = 0.dp,
+                        start = 9.dp,
+                        end = 9.dp,
+                        top = 3.dp,
+                        bottom = 3.dp,
+                        cornerSize = 15.dp,
+                        containerColor = Color("#E2E9E5".toColorInt()),
+                        contentColor = Color.Gray,
+                        onClick = { println() },
                         contentDescription = "check test"
                     )
+//                    Icon(
+//                        tint = Color.Unspecified,
+//                        painter = painterResource(R.drawable.checktest),
+//                        contentDescription = "check test"
+//                    )
 
-                    Icon(
-                        tint = Color.Unspecified,
-                        painter = painterResource(R.drawable.startharvest),
-                        contentDescription = "start harvest"
-                    )
+                    if (shelfData.warnings == null)
+                        RoundedIconButton(
+                            painter = painterResource(R.drawable.run_test),
+                            borderWidth = 0.dp,
+                            start = 9.dp,
+                            end = 9.dp,
+                            top = 3.dp,
+                            bottom = 3.dp,
+                            cornerSize = 15.dp,
+                            containerColor = Color("#E2E9E5".toColorInt()),
+                            contentColor = Color.Gray,
+                            onClick = onRunHarvestClick,
+                            contentDescription = "start harvest"
+                        )
+//                        Icon(
+//                            tint = Color.Unspecified,
+//                            painter = painterResource(R.drawable.startharvest),
+//                            contentDescription = "start harvest"
+//                        )
                 }
             }
         }
@@ -266,6 +296,7 @@ fun ShelfItemPreview() {
             charge = 85,
             taskPercent = 40.0
         ),
-        onMonitoringClick = { println("monitoring click") }
+        onMonitoringClick = { println("monitoring click") },
+        onRunHarvestClick = {}
     )
 }

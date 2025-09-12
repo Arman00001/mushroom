@@ -206,6 +206,7 @@ fun HomeScreenContent(
                             ShelfScreen(
                                 shelfData = shelf,
                                 onMonitoringClick = onMonitoringClick,
+                                onRunHarvestClick = onRunHarvestClick
                             )
                         }
                     }
